@@ -1,0 +1,21 @@
+{
+  "prefix": ",",
+
+  "verificationLink": "https://restorecord.com/verify/frozi.lol",
+
+  "embedColorPrimary": "#3498DB",
+
+  "embedColorSuccess": "#00FF00",
+  "embedColorWarning": "#FFCC4D",
+  "embedColorError": "#FF0000",
+
+  "footerText": "frozi.lol",
+
+  "ticketRoleId": "1380589244392804522",
+
+  "ownerId": "804372572928999434",
+
+  "archiveChannelId": "1380608778726146048",
+  "logChannelId": "1380404393324576772",
+  "welcomeChannelId": "1380404393324576777"
+}
