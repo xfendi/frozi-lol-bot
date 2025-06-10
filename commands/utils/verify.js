@@ -19,9 +19,9 @@ module.exports = {
       .setTimestamp();
 
     const button = new ButtonBuilder()
-      .setLabel("✅ Verify Me")
-      .setStyle(ButtonStyle.Link)
-      .setURL(Config.verificationLink);
+      .setLabel("Verify Me")
+      .setStyle(ButtonStyle.Success)
+      .setCustomId("verify-button");
 
     const row = new ActionRowBuilder().addComponents(button);
 

@@ -120,6 +120,38 @@ module.exports = {
         modal.addComponents(row);
 
         await interaction.showModal(modal);
+      } else if (interaction.customId === "verify-button") {
+        const errorMessage = "There was an error while veferifying you!";
+        const roleId = Config.verifyRoleId;
+        const role = interaction.guild.roles.cache.get(roleId);
+
+        if (!role) {
+          return interaction.reply({
+            content: errorMessage,
+            ephemeral: true,
+          });
+        }
+
+        if (interaction.member.roles.cache.has(roleId)) {
+          return interaction.reply({
+            content: "You have already verified!",
+            ephemeral: true,
+          });
+        }
+
+        try {
+          await interaction.member.roles.add(role);
+          await interaction.reply({
+            content: `You've been successfully verofied!`,
+            ephemeral: true,
+          });
+        } catch (error) {
+          console.error(error);
+          await interaction.reply({
+            content: errorMessage,
+            ephemeral: true,
+          });
+        }
       }
     } else if (interaction.type === InteractionType.ModalSubmit) {
       if (interaction.customId === "close_ticket_modal") {
