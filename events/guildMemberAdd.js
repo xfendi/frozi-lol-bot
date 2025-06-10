@@ -16,11 +16,18 @@ module.exports = {
       })
       .setThumbnail(interaction.user.displayAvatarURL())
       .setTitle("Member joined")
-      .addFields({
-        name: "User",
-        value: `<@${interaction.user.id}> (${interaction.user.id})`,
-        inline: true,
-      })
+      .addFields(
+        {
+          name: "User",
+          value: `<@${interaction.user.id}> (${interaction.user.id})`,
+        },
+        {
+          name: "Account Created",
+          value: `<t:${Math.floor(
+            interaction.user.createdTimestamp / 1000
+          )}:F>`,
+        }
+      )
       .setTimestamp()
       .setFooter({ text: `${Config.footerText}` });
 

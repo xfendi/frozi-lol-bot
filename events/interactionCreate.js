@@ -142,7 +142,7 @@ module.exports = {
         try {
           await interaction.member.roles.add(role);
           await interaction.reply({
-            content: `You've been successfully verofied!`,
+            content: `You've been successfully verified!`,
             ephemeral: true,
           });
         } catch (error) {
