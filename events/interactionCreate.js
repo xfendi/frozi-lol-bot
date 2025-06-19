@@ -152,6 +152,38 @@ module.exports = {
             ephemeral: true,
           });
         }
+      } else if (interaction.customId === "og-button") {
+        const errorMessage = "There was an error while adding you role!";
+        const roleId = Config.ogRoleId;
+        const role = interaction.guild.roles.cache.get(roleId);
+
+        if (!role) {
+          return interaction.reply({
+            content: errorMessage,
+            ephemeral: true,
+          });
+        }
+
+        if (interaction.member.roles.cache.has(roleId)) {
+          return interaction.reply({
+            content: "You already have this role!",
+            ephemeral: true,
+          });
+        }
+
+        try {
+          await interaction.member.roles.add(role);
+          await interaction.reply({
+            content: `You have been successfully given the <@&${Config.ogRoleId}> role!`,
+            ephemeral: true,
+          });
+        } catch (error) {
+          console.error(error);
+          await interaction.reply({
+            content: errorMessage,
+            ephemeral: true,
+          });
+        }
       }
     } else if (interaction.type === InteractionType.ModalSubmit) {
       if (interaction.customId === "close_ticket_modal") {
