@@ -19,6 +19,9 @@ const ImplementerSchema = new mongoose.Schema({
   lastPayout: {
     type: Date,
   },
+  lastAdvertisedAt: {
+    type: Date,
+  },
   addedAt: {
     type: Date,
     default: Date.now,

@@ -2,6 +2,22 @@ const { Events } = require("discord.js");
 const mongoose = require("mongoose");
 
 const { startBumpRefresher } = require("../scripts/bumpMessages");
+const { HOURS_FOR_LAST_PARTNERSHIP } = require("../data/partnerships");
+
+function scheduleDailyImplementersReminder(client) {
+  const now = new Date();
+  const millisTillMidnight =
+    new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0) -
+    now;
+
+  setTimeout(function () {
+    remindInactiveImplementers(client);
+
+    setInterval(() => {
+      remindInactiveImplementers(client);
+    }, HOURS_FOR_LAST_PARTNERSHIP * 60 * 60 * 1000);
+  }, millisTillMidnight);
+}
 
 module.exports = {
   name: Events.ClientReady,
@@ -18,6 +34,7 @@ module.exports = {
     const mongoURI = process.env.MONGO_URI;
 
     startBumpRefresher(client);
+    scheduleDailyImplementersReminder(client);
 
     try {
       await mongoose.connect(mongoURI);
