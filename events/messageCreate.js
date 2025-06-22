@@ -7,9 +7,9 @@ const { DEFAULT_PARTNERSHIP_PRICE } = require("../data/partnerships");
 module.exports = {
   name: "messageCreate",
   async execute(client, message) {
-    if (message.author.bot || message.author.id !== ownerId) return;
+    if (message.author.bot) return;
 
-    if (message.channel.id === Config.partnershipChannelId) {
+    if (message.channel.id === Config.partnershipChannelId && message.author.roles.cache.has(Config.implementerRoleId)) {
       const firstMention = message.mentions.users.first();
       if (!firstMention) return;
 
@@ -25,7 +25,7 @@ module.exports = {
           });
         } else {
           user.amount += 1;
-          const newBalance = user.balance += DEFAULT_PARTNERSHIP_PRICE;
+          const newBalance = (user.balance += DEFAULT_PARTNERSHIP_PRICE);
           let rounded = Number(newBalance.toFixed(2));
 
           user.balance = rounded;
@@ -54,7 +54,8 @@ module.exports = {
       }
     }
 
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(prefix) || message.author.id !== ownerId)
+      return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
