@@ -24,6 +24,22 @@ const createTicket = async (interaction, type) => {
     .replace(/[^a-z0-9]/gi, "-");
   const channelName = `🎫・${topic}・${username}`;
 
+  const entry = await implementer.findOne({ userId: interaction.user.id });
+
+  if (!entry && type === "payout-partnerships") {
+    return interaction.reply({
+      content: "`⚠️` This user is not in the implementer database.",
+      ephemeral: true,
+    });
+  }
+
+  if (entry && type === "apply-implementer") {
+    return interaction.reply({
+      content: "`⚠️` This user is already in the implementer database.",
+      ephemeral: true,
+    });
+  }
+
   const ticketChannel = await interaction.guild.channels.create({
     name: channelName,
     type: ChannelType.GuildText,
@@ -52,34 +68,36 @@ const createTicket = async (interaction, type) => {
     ],
   });
 
-  const entry = await implementer.findOne({ userId: interaction.user.id });
-
-  let implementerInfo = `> **Added At:** <t:${Math.floor(
-    entry.addedAt.getTime() / 1000
-  )}:F>
-  > **Amount:** \`${entry.amount}\`
-  > **Balance:** \`${entry.balance} PLN\``;
-
-  if (entry.lastPayout) {
-    implementerInfo += `
-    > **Last Payout:** <t:${Math.floor(
-      entry.lastPayout.getTime() / 1000
-    )}:F>`;
-  }
-
-  const ticketEmbed = new EmbedBuilder()
-    .setColor(Config.embedColorPrimary)
-    .setDescription(
-      `# \`💻 TICKET × ${topic.toUpperCase()}\`
+  let description = `# \`💻 TICKET × ${topic.toUpperCase()}\`
       > **Ping:** <@${interaction.user.id}>
       > **Nick:** \`${interaction.user.username}\`
       > **ID:** \`${interaction.user.id}\`
+      `;
 
-      ${type === "payout-partnerships" ? implementerInfo : ""}
+  if (entry && type === "payout-partnerships") {
+    let implementerInfo = `
+    > **Added At:** <t:${Math.floor(entry.addedAt.getTime() / 1000)}:F>
+  > **Amount:** \`${entry.amount}\`
+  > **Balance:** \`${entry.balance} PLN\``;
 
-      > Describe your issue in detail,
-      > and our team will assist you as soon as possible.`
-    )
+    if (entry.lastPayout) {
+      implementerInfo += `
+    > **Last Payout:** <t:${Math.floor(entry.lastPayout.getTime() / 1000)}:F>
+    `;
+    } else {
+      implementerInfo += `\n`;
+    }
+
+    description += implementerInfo;
+  }
+
+  description += `
+  > Describe your issue in detail,
+  > and our team will assist you as soon as possible.`;
+
+  const ticketEmbed = new EmbedBuilder()
+    .setColor(Config.embedColorPrimary)
+    .setDescription(description)
     .setThumbnail(interaction.user.displayAvatarURL())
     .setTimestamp()
     .setFooter({ text: Config.footerText });
@@ -120,7 +138,7 @@ module.exports = {
         await createTicket(interaction);
       } else if (interaction.customId === "partnerships-info-topic-select") {
         if (interaction.values[0] === "apply-implementer") {
-          await createTicket(interaction);
+          await createTicket(interaction, "apply-implementer");
         } else if (interaction.values[0] === "payout-partnerships") {
           await createTicket(interaction, "payout-partnerships");
         } else if (interaction.values[0] === "implementer-info") {
