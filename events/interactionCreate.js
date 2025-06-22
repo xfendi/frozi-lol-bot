@@ -145,6 +145,8 @@ module.exports = {
       interaction.componentType === ComponentType.StringSelect
     ) {
       if (interaction.customId === "ticket-topic-select") {
+        await interaction.deferReply({ ephemeral: true });
+
         await createTicket(interaction);
       } else if (interaction.customId === "partnerships-info-topic-select") {
         await interaction.deferReply({ ephemeral: true });
@@ -165,7 +167,7 @@ module.exports = {
               ephemeral: true,
             });
           }
-          
+
           await interaction.editReply({ embeds: [embed], ephemeral: true });
         }
       }
