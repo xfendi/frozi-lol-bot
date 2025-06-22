@@ -6,10 +6,7 @@ const getImplementerInfoEmbed = async (user, message) => {
   const entry = await implementer.findOne({ userId: user.id });
 
   if (!entry) {
-    return message.reply({
-      content: "`⚠️` This user is not in the implementer database.",
-      ephemeral: true,
-    });
+    return;
   }
 
   let fields = [

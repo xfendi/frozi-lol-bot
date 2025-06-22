@@ -14,6 +14,10 @@ module.exports = {
 
     const embed = await getImplementerInfoEmbed(user, message);
 
+    if (!embed) {
+      return message.reply("`⚠️` This user is not in the implementer database.");
+    }
+
     try {
       message.reply({ embeds: [embed] });
     } catch (err) {

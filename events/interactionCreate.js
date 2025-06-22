@@ -25,29 +25,27 @@ const createTicket = async (interaction, type) => {
     .replace(/[^a-z0-9]/gi, "-");
   const channelName = `🎫・${topic}・${username}`;
 
-  await interaction.deferReply({ ephemeral: true });
-
   const entry = await implementer.findOne({ userId: interaction.user.id });
 
   if (!entry && type === "payout-partnerships") {
-    return interaction.reply({
+    return interaction.editReply({
       content: "`⚠️` This user is not in the implementer database.",
       ephemeral: true,
     });
   }
 
   if (entry && type === "apply-implementer") {
-    return interaction.reply({
+    return interaction.editReply({
       content: "`⚠️` This user is already in the implementer database.",
       ephemeral: true,
     });
   }
 
   if (
-    entry.balance < MINIMUM_BALANCE_FOR_PAYOUT &&
-    type === "payout-partnership"
+    type === "payout-partnership" &&
+    entry.balance < MINIMUM_BALANCE_FOR_PAYOUT
   ) {
-    return interaction.reply({
+    return interaction.editReply({
       content: `\`⚠️\` This user does not have enough balance. Minimum balance is ${MINIMUM_BALANCE_FOR_PAYOUT} PLN.`,
       ephemeral: true,
     });
@@ -149,6 +147,8 @@ module.exports = {
       if (interaction.customId === "ticket-topic-select") {
         await createTicket(interaction);
       } else if (interaction.customId === "partnerships-info-topic-select") {
+        await interaction.deferReply({ ephemeral: true });
+
         if (interaction.values[0] === "apply-implementer") {
           await createTicket(interaction, "apply-implementer");
         } else if (interaction.values[0] === "payout-partnerships") {
@@ -158,7 +158,15 @@ module.exports = {
             interaction.user,
             interaction
           );
-          await interaction.reply({ embeds: [embed], ephemeral: true });
+
+          if (!embed) {
+            return interaction.editReply({
+              content: "`⚠️` This user is not in the implementer database.",
+              ephemeral: true,
+            });
+          }
+          
+          await interaction.editReply({ embeds: [embed], ephemeral: true });
         }
       }
     } else if (
