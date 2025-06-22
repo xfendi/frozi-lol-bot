@@ -61,23 +61,26 @@ module.exports = {
           .setColor(Config.embedColorPrimary)
           .setDescription(
             `# \`💻 TICKET × ${topic.toUpperCase()}\`
+            > **Ping:** <@${interaction.user.id}>
+            > **Nick:** \`${interaction.user.username}\`
+            > **ID:** \`${interaction.user.id}\`
 
-            > Describe your issue in detail, and our team will assist you as soon as possible.
-
-            > **Ticket created by:** <@${interaction.user.id}>\n`
+            > Describe your issue in detail,
+            > and our team will assist you as soon as possible.`
           )
+          .setThumbnail(interaction.user.displayAvatarURL())
           .setTimestamp()
           .setFooter({ text: Config.footerText });
 
         const closeEmoji = {
-          name: "nie",
-          id: "998637736879730708",
+          name: "NO",
+          id: "1386380304293429278",
         };
 
         const closeButton = new ButtonBuilder()
           .setCustomId("close_ticket")
           .setLabel("Close Ticket")
-          .setStyle(ButtonStyle.Danger)
+          .setStyle(ButtonStyle.Secondary)
           .setEmoji(closeEmoji);
 
         const row = new ActionRowBuilder().addComponents(closeButton);

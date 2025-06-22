@@ -10,31 +10,37 @@ const ticketOptions = [
   {
     label: "Account",
     value: "account",
+    description: "Issues with your account, login, etc.",
     emoji: "👤",
   },
   {
     label: "Purchases",
     value: "purchases",
+    description: "Help with orders or payments.",
     emoji: "🛒",
   },
   {
     label: "Badge",
     value: "badge",
+    description: "Questions about badges or rewards.",
     emoji: "⭐",
   },
   {
     label: "Partnership",
     value: "partnership",
+    description: "Interested in working together?",
     emoji: "🤝",
   },
   {
     label: "Report User",
     value: "report",
+    description: "Report a user for breaking rules.",
     emoji: "🚨",
   },
   {
     label: "Others",
     value: "others",
+    description: "Anything else not listed above.",
     emoji: "❓",
   },
 ];
