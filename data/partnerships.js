@@ -1,0 +1,5 @@
+const DEFAULT_PARTNERSHIP_PRICE = 0.4;
+
+module.exports = {
+  DEFAULT_PARTNERSHIP_PRICE,
+};
