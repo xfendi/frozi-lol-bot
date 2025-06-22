@@ -16,6 +16,7 @@ const {
 const Config = require("../config.json");
 const { getImplementerInfoEmbed } = require("../data/messages/implementerinfo");
 const implementer = require("../models/implementer");
+const { MINIMUM_BALANCE_FOR_PAYOUT } = require("../data/partnerships");
 
 const createTicket = async (interaction, type) => {
   const topic = interaction.values[0];
@@ -38,6 +39,16 @@ const createTicket = async (interaction, type) => {
   if (entry && type === "apply-implementer") {
     return interaction.reply({
       content: "`⚠️` This user is already in the implementer database.",
+      ephemeral: true,
+    });
+  }
+
+  if (
+    entry.balance < MINIMUM_BALANCE_FOR_PAYOUT &&
+    type === "payout-partnership"
+  ) {
+    return interaction.reply({
+      content: `\`⚠️\` This user does not have enough balance. Minimum balance is ${MINIMUM_BALANCE_FOR_PAYOUT} PLN.`,
       ephemeral: true,
     });
   }
