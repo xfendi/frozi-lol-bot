@@ -1,6 +1,8 @@
 const { Events } = require("discord.js");
 const mongoose = require("mongoose");
 
+const { startBumpRefresher } = require("../scripts/bumpMessages");
+
 module.exports = {
   name: Events.ClientReady,
   once: true,
@@ -14,6 +16,8 @@ module.exports = {
     });
 
     const mongoURI = process.env.MONGO_URI;
+
+    startBumpRefresher(client);
 
     try {
       await mongoose.connect(mongoURI);
