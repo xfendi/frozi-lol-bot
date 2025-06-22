@@ -24,6 +24,8 @@ const createTicket = async (interaction, type) => {
     .replace(/[^a-z0-9]/gi, "-");
   const channelName = `🎫・${topic}・${username}`;
 
+  await interaction.deferReply({ ephemeral: true });
+
   const entry = await implementer.findOne({ userId: interaction.user.id });
 
   if (!entry && type === "payout-partnerships") {
@@ -121,9 +123,8 @@ const createTicket = async (interaction, type) => {
     content: `<@${interaction.user.id}>`,
   });
 
-  await interaction.reply({
+  await interaction.editRepl({
     content: `\`✅\` Ticket created: <#${ticketChannel.id}>`,
-    ephemeral: true,
   });
 };
 
