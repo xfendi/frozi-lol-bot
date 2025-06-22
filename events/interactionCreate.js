@@ -14,6 +14,84 @@ const {
 } = require("discord.js");
 
 const Config = require("../config.json");
+const { getImplementerInfoEmbed } = require("../data/messages/implementerinfo");
+
+const createTicket = async (interaction, type) => {
+  const topic = interaction.values[0];
+  const username = interaction.user.username
+    .toLowerCase()
+    .replace(/[^a-z0-9]/gi, "-");
+  const channelName = `🎫・${topic}・${username}`;
+
+  const ticketChannel = await interaction.guild.channels.create({
+    name: channelName,
+    type: ChannelType.GuildText,
+    parent: null,
+    permissionOverwrites: [
+      {
+        id: interaction.guild.id,
+        deny: [PermissionFlagsBits.ViewChannel],
+      },
+      {
+        id: interaction.user.id,
+        allow: [
+          PermissionFlagsBits.ViewChannel,
+          PermissionFlagsBits.SendMessages,
+          PermissionFlagsBits.ReadMessageHistory,
+        ],
+      },
+      {
+        id: Config.ticketRoleId,
+        allow: [
+          PermissionFlagsBits.ViewChannel,
+          PermissionFlagsBits.SendMessages,
+          PermissionFlagsBits.ReadMessageHistory,
+        ],
+      },
+    ],
+  });
+
+  const ticketEmbed = new EmbedBuilder()
+    .setColor(Config.embedColorPrimary)
+    .setDescription(
+      `# \`💻 TICKET × ${topic.toUpperCase()}\`
+      > **Ping:** <@${interaction.user.id}>
+      > **Nick:** \`${interaction.user.username}\`
+      > **ID:** \`${interaction.user.id}\`
+
+      ${type === "payout-partnerships" && "💸 Payout"}
+
+      > Describe your issue in detail,
+      > and our team will assist you as soon as possible.`
+    )
+    .setThumbnail(interaction.user.displayAvatarURL())
+    .setTimestamp()
+    .setFooter({ text: Config.footerText });
+
+  const closeEmoji = {
+    name: "NO",
+    id: "1386380304293429278",
+  };
+
+  const closeButton = new ButtonBuilder()
+    .setCustomId("close_ticket")
+    .setLabel("Close Ticket")
+    .setStyle(ButtonStyle.Secondary)
+    .setEmoji(closeEmoji);
+
+  const row = new ActionRowBuilder().addComponents(closeButton);
+
+  await ticketChannel.send({
+    embeds: [ticketEmbed],
+    components: [row],
+    content: `<@${interaction.user.id}>`,
+  });
+
+  await interaction.reply({
+    content: `\`✅\` Ticket created: <#${ticketChannel.id}>`,
+    ephemeral: true,
+  });
+};
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -23,78 +101,16 @@ module.exports = {
       interaction.componentType === ComponentType.StringSelect
     ) {
       if (interaction.customId === "ticket-topic-select") {
-        const topic = interaction.values[0];
-        const username = interaction.user.username
-          .toLowerCase()
-          .replace(/[^a-z0-9]/gi, "-");
-        const channelName = `🎫・${topic}・${username}`;
-
-        const ticketChannel = await interaction.guild.channels.create({
-          name: channelName,
-          type: ChannelType.GuildText,
-          parent: null,
-          permissionOverwrites: [
-            {
-              id: interaction.guild.id,
-              deny: [PermissionFlagsBits.ViewChannel],
-            },
-            {
-              id: interaction.user.id,
-              allow: [
-                PermissionFlagsBits.ViewChannel,
-                PermissionFlagsBits.SendMessages,
-                PermissionFlagsBits.ReadMessageHistory,
-              ],
-            },
-            {
-              id: Config.ticketRoleId,
-              allow: [
-                PermissionFlagsBits.ViewChannel,
-                PermissionFlagsBits.SendMessages,
-                PermissionFlagsBits.ReadMessageHistory,
-              ],
-            },
-          ],
-        });
-
-        const ticketEmbed = new EmbedBuilder()
-          .setColor(Config.embedColorPrimary)
-          .setDescription(
-            `# \`💻 TICKET × ${topic.toUpperCase()}\`
-            > **Ping:** <@${interaction.user.id}>
-            > **Nick:** \`${interaction.user.username}\`
-            > **ID:** \`${interaction.user.id}\`
-
-            > Describe your issue in detail,
-            > and our team will assist you as soon as possible.`
-          )
-          .setThumbnail(interaction.user.displayAvatarURL())
-          .setTimestamp()
-          .setFooter({ text: Config.footerText });
-
-        const closeEmoji = {
-          name: "NO",
-          id: "1386380304293429278",
-        };
-
-        const closeButton = new ButtonBuilder()
-          .setCustomId("close_ticket")
-          .setLabel("Close Ticket")
-          .setStyle(ButtonStyle.Secondary)
-          .setEmoji(closeEmoji);
-
-        const row = new ActionRowBuilder().addComponents(closeButton);
-
-        await ticketChannel.send({
-          embeds: [ticketEmbed],
-          components: [row],
-          content: `<@${interaction.user.id}>`,
-        });
-
-        await interaction.reply({
-          content: `\`✅\` Ticket created: <#${ticketChannel.id}>`,
-          ephemeral: true,
-        });
+        await createTicket(interaction);
+      } else if (interaction.customId === "partnerships-info-topic-select") {
+        if (interaction.values[0] === "apply-implementer") {
+          await createTicket(interaction);
+        } else if (interaction.values[0] === "payout-partnerships") {
+          await createTicket(interaction, "payout-partnerships");
+        } else if (interaction.values[0] === "implementer-info") {
+          const embed = await getImplementerInfoEmbed(interaction.user, interaction);
+          await interaction.reply({ embeds: [embed], ephemeral: true });
+        }
       }
     } else if (
       interaction.type === InteractionType.MessageComponent &&
