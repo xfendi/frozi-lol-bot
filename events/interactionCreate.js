@@ -123,7 +123,7 @@ const createTicket = async (interaction, type) => {
     content: `<@${interaction.user.id}>`,
   });
 
-  await interaction.editRepl({
+  await interaction.editReply({
     content: `\`✅\` Ticket created: <#${ticketChannel.id}>`,
   });
 };
