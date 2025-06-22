@@ -9,7 +9,12 @@ module.exports = {
   async execute(client, message) {
     if (message.author.bot) return;
 
-    if (message.channel.id === Config.partnershipChannelId && message.author.roles.cache.has(Config.implementerRoleId)) {
+    const member = message.guild.members.cache.get(message.author.id);
+
+    if (
+      message.channel.id === Config.partnershipChannelId &&
+      member.roles.cache.has(Config.implementerRoleId)
+    ) {
       const firstMention = message.mentions.users.first();
       if (!firstMention) return;
 
