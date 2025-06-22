@@ -15,6 +15,7 @@ const {
 
 const Config = require("../config.json");
 const { getImplementerInfoEmbed } = require("../data/messages/implementerinfo");
+const implementer = require("../models/implementer");
 
 const createTicket = async (interaction, type) => {
   const topic = interaction.values[0];
@@ -51,6 +52,21 @@ const createTicket = async (interaction, type) => {
     ],
   });
 
+  const entry = await implementer.findOne({ userId: interaction.user.id });
+
+  let implementerInfo = `> **Added At:** <t:${Math.floor(
+    entry.addedAt.getTime() / 1000
+  )}:F>
+  > **Amount:** \`${entry.amount}\`
+  > **Balance:** \`${entry.balance} PLN\``;
+
+  if (entry.lastPayout) {
+    implementerInfo += `
+    > **Last Payout:** <t:${Math.floor(
+      entry.lastPayout.getTime() / 1000
+    )}:F>`;
+  }
+
   const ticketEmbed = new EmbedBuilder()
     .setColor(Config.embedColorPrimary)
     .setDescription(
@@ -59,7 +75,7 @@ const createTicket = async (interaction, type) => {
       > **Nick:** \`${interaction.user.username}\`
       > **ID:** \`${interaction.user.id}\`
 
-      ${type === "payout-partnerships" && "💸 Payout"}
+      ${type === "payout-partnerships" ? implementerInfo : ""}
 
       > Describe your issue in detail,
       > and our team will assist you as soon as possible.`
@@ -108,7 +124,10 @@ module.exports = {
         } else if (interaction.values[0] === "payout-partnerships") {
           await createTicket(interaction, "payout-partnerships");
         } else if (interaction.values[0] === "implementer-info") {
-          const embed = await getImplementerInfoEmbed(interaction.user, interaction);
+          const embed = await getImplementerInfoEmbed(
+            interaction.user,
+            interaction
+          );
           await interaction.reply({ embeds: [embed], ephemeral: true });
         }
       }
