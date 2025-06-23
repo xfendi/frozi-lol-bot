@@ -26,6 +26,29 @@ const ImplementerSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  partnerships: {
+    type: [
+      {
+        invite: {
+          type: String,
+          required: true,
+        },
+        representiveId: {
+          type: String,
+          required: true,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+        messageId: {
+          type: String,
+          required: true,
+          unique: true,
+        },
+      },
+    ],
+  },
 });
 
 module.exports = mongoose.model("Implementer", ImplementerSchema);

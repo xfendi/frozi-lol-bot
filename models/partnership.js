@@ -1,19 +1,28 @@
 const mongoose = require("mongoose");
 
 const PartnershipSchema = new mongoose.Schema({
-  lastImplementerId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  lastRepresentativeId: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
+  messages: {
+    type: [
+      {
+        implementerId: {
+          type: String,
+          required: true,
+        },
+        representativeId: {
+          type: String,
+          required: true,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+        messageId: {
+          type: String,
+          required: true,
+          unique: true,
+        },
+      },
+    ]
   },
   lastAdvertisedAt: {
     type: Date,

@@ -111,27 +111,45 @@ module.exports = {
           });
         }
 
-        user.amount += 1;
         const newBalance = (user.balance += DEFAULT_PARTNERSHIP_PRICE);
         user.balance = Number(newBalance.toFixed(2));
+
+        user.amount += 1;
+
         user.lastAdvertisedAt = new Date();
+        user.partnerships.push({
+          representiveId: mentionedUserId,
+          invite: firstInvite,
+          createdAt: new Date(),
+          messageId: message.id,
+        });
+
         await user.save();
 
         const existing = await partnership.findOne({ invite: firstInvite });
 
         if (existing) {
-          existing.lastImplementerId = user.userId;
-          existing.lastAdvertisedAt = new Date();
-          existing.lastRepresentativeId = mentionedUserId;
+          existing.messages.push({
+            implementerId: user.userId,
+            representativeId: mentionedUserId,
+            createdAt: new Date(),
+            messageId: message.id,
+          });
 
+          existing.lastAdvertisedAt = new Date();
           await existing.save();
         } else {
           const newPartnership = new partnership({
-            lastImplementerId: user.userId,
             invite: firstInvite,
-            createdAt: new Date(),
             lastAdvertisedAt: new Date(),
-            lastRepresentativeId: mentionedUserId,
+            messages: [
+              {
+                implementerId: user.userId,
+                representativeId: mentionedUserId,
+                createdAt: new Date(),
+                messageId: message.id,
+              },
+            ],
           });
 
           await newPartnership.save();

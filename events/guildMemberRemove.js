@@ -1,12 +1,16 @@
 const { Events, AuditLogEvent, EmbedBuilder } = require("discord.js");
 const Config = require("../config.json");
+const partnership = require("../models/partnership");
+const {
+  findAndDeleteRepresentivePartnerships,
+} = require("../utils/findAndDeleteRepresentivePartnerships");
 
 module.exports = {
   name: Events.GuildMemberRemove,
   async execute(client, member) {
-    const logChannel = member.guild.channels.cache.get(
-      Config.logChannelId
-    );
+    const logChannel = member.guild.channels.cache.get(Config.logChannelId);
+
+    await findAndDeleteRepresentivePartnerships(client, member.user.id);
 
     if (logChannel) {
       const fetchedLogs = await member.guild.fetchAuditLogs({
