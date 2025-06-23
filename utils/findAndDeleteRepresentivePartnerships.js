@@ -7,28 +7,24 @@ const findAndDeleteRepresentivePartnerships = async (client, userId) => {
     "messages.representativeId": userId,
   });
 
-  const messageIds = reps.flatMap((doc) =>
-    doc.messages
-      .filter((msg) => msg.representativeId === userId)
-      .map((msg) => msg.messageId)
-  );
-
   const logChannel = await client.channels.fetch(
     Config.partnershipLogChannelId
   );
 
-  for (const messageId of messageIds) {
-    for (const doc of reps) {
-      const channel = await client.channels
-        .fetch(Config.partnershipChannelId)
-        .catch(() => null);
-      if (!channel || !channel.isTextBased()) continue;
+  for (const doc of reps) {
+    const messagesToDelete = doc.messages.filter(
+      (msg) => msg.representativeId === userId
+    );
 
+    const channel = await client.channels
+      .fetch(Config.partnershipChannelId)
+      .catch(() => null);
+    if (!channel || !channel.isTextBased()) continue;
+
+    for (const messageData of messagesToDelete) {
       try {
-        const msg = await channel.messages.fetch(messageId);
+        const msg = await channel.messages.fetch(messageData.messageId);
         await msg.delete();
-
-        const messageData = doc.messages.find((m) => m.messageId === messageId);
 
         const embed = new EmbedBuilder()
           .setColor(Config.embedColorError)
@@ -47,16 +43,8 @@ const findAndDeleteRepresentivePartnerships = async (client, userId) => {
               value: `<@${messageData.implementerId}> (${messageData.implementerId})`,
               inline: false,
             },
-            {
-              name: "Invite",
-              value: doc.invite,
-              inline: false,
-            },
-            {
-              name: "Message ID",
-              value: messageId,
-              inline: false,
-            }
+            { name: "Invite", value: doc.invite, inline: false },
+            { name: "Message ID", value: messageData.messageId, inline: false }
           )
           .setFooter({ text: Config.footerText })
           .setTimestamp();
@@ -65,7 +53,35 @@ const findAndDeleteRepresentivePartnerships = async (client, userId) => {
           await logChannel.send({ embeds: [embed] });
         }
       } catch (err) {
-        console.warn(`Failed to delete message ${messageId}:`, err.message);
+        console.warn(
+          `Failed to delete message ${messageData.messageId}:`,
+          err.message
+        );
+      }
+    }
+
+    await partnership.updateOne(
+      { _id: doc._id },
+      { $pull: { messages: { representativeId: userId } } }
+    );
+
+    const updatedDoc = await partnership.findById(doc._id);
+
+    if (!updatedDoc.messages || updatedDoc.messages.length === 0) {
+      await partnership.deleteOne({ _id: doc._id });
+
+      const embed = new EmbedBuilder()
+        .setColor(Config.embedColorError)
+        .setTitle("Empty Partnership Deleted!")
+        .setDescription(
+          `> Deleted a entire partnership from database caused by <@${userId}> leaving the server.`
+        )
+        .addFields({ name: "Invite", value: doc.invite, inline: false })
+        .setFooter({ text: Config.footerText })
+        .setTimestamp();
+
+      if (logChannel && logChannel.isTextBased()) {
+        await logChannel.send({ embeds: [embed] });
       }
     }
   }

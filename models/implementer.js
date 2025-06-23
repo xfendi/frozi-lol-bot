@@ -32,10 +32,12 @@ const ImplementerSchema = new mongoose.Schema({
         invite: {
           type: String,
           required: true,
+          unique: false,
         },
         representiveId: {
           type: String,
           required: true,
+          unique: false,
         },
         createdAt: {
           type: Date,

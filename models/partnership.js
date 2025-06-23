@@ -7,10 +7,12 @@ const PartnershipSchema = new mongoose.Schema({
         implementerId: {
           type: String,
           required: true,
+          unique: false,
         },
         representativeId: {
           type: String,
           required: true,
+          unique: false,
         },
         createdAt: {
           type: Date,
