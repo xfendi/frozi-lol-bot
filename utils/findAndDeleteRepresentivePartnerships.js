@@ -28,6 +28,8 @@ const findAndDeleteRepresentivePartnerships = async (client, userId) => {
         const msg = await channel.messages.fetch(messageId);
         await msg.delete();
 
+        const messageData = doc.messages.find((m) => m.messageId === messageId);
+
         const embed = new EmbedBuilder()
           .setColor(Config.embedColorError)
           .setTitle("Partnership Deleted!")
@@ -38,6 +40,11 @@ const findAndDeleteRepresentivePartnerships = async (client, userId) => {
             {
               name: "Representative",
               value: `<@${userId}> (${userId})`,
+              inline: false,
+            },
+            {
+              name: "Implementer",
+              value: `<@${messageData.implementerId}> (${messageData.implementerId})`,
               inline: false,
             },
             {
