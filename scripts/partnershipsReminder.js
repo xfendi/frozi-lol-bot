@@ -51,7 +51,7 @@ async function remindInactiveImplementers(client) {
           .setFooter({ text: config.footerText })
           .setTimestamp();
 
-        //await dm.send({ embeds: [dmEmbed] });
+        await dm.send({ embeds: [dmEmbed] });
 
         const partnershipLogChannel = await client.channels.fetch(
           config.partnershipLogChannelId

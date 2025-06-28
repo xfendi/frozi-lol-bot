@@ -8,7 +8,6 @@ module.exports = {
   name: "remind-implementers",
   description: "Reminds inactive implementers",
   execute(message, args, client) {
-    console.log("Reminding implementers");
     remindInactiveImplementers(client);
 
     const embed = new EmbedBuilder()
