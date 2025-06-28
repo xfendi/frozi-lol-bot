@@ -17,6 +17,9 @@ const Config = require("../config.json");
 const { getImplementerInfoEmbed } = require("../data/messages/implementerinfo");
 const implementer = require("../models/implementer");
 const { MINIMUM_BALANCE_FOR_PAYOUT } = require("../data/partnerships");
+const {
+  getPartnershipsRequirementsEmbed,
+} = require("../data/messages/partnershipsRequirements");
 
 const createTicket = async (interaction, type) => {
   const topic = interaction.values[0];
@@ -168,7 +171,10 @@ module.exports = {
             });
           }
 
-          await interaction.editReply({ embeds: [embed], ephemeral: true });
+          await interaction.editReply({ embeds: [embed] });
+        } else if (interaction.values[0] === "partnerships-requirements") {
+          const embed = getPartnershipsRequirementsEmbed();
+          return interaction.editReply({ embeds: [embed] });
         }
       }
     } else if (

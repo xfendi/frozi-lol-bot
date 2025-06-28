@@ -25,19 +25,6 @@ async function remindInactiveImplementers(client) {
         const user = await client.users.fetch(impl.userId);
         const dm = await user.createDM();
 
-        const messages = await dm.messages.fetch({ limit: 10 });
-        const botMessages = messages.filter(
-          (msg) => msg.author.id === client.user.id
-        );
-
-        for (const [id, msg] of botMessages) {
-          try {
-            await msg.delete();
-          } catch (e) {
-            console.error(e);
-          }
-        }
-
         const dmEmbed = new EmbedBuilder()
           .setColor(config.embedColorWarning)
           .setTitle(

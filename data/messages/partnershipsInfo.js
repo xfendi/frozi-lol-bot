@@ -8,6 +8,12 @@ const Config = require("../../config.json");
 
 const ticketOptions = [
   {
+    label: "Partnerships Reqirements",
+    value: "partnerships-requirements",
+    description: "Displays partnerships requirements",
+    emoji: "📜",
+  },
+  {
     label: "Apply for Implementer",
     value: "apply-implementer",
     description: "Apply for implementer role",
@@ -20,9 +26,9 @@ const ticketOptions = [
     emoji: "👤",
   },
   {
-    label: "Payout",
+    label: "Implementer Payout",
     value: "payout-partnerships",
-    description: "Open ticket for payout your partnership",
+    description: "Open ticket for payout your partnerships",
     emoji: "💸",
   },
 ];

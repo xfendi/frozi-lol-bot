@@ -83,22 +83,6 @@ module.exports = {
             .setFooter({ text: Config.footerText })
             .setTimestamp();
 
-          const user = message.author;
-          const dmChannel = await user.createDM();
-
-          const messages = await dmChannel.messages.fetch({ limit: 10 });
-          const botMessages = messages.filter(
-            (msg) => msg.author.id === message.client.user.id
-          );
-
-          for (const [id, msg] of botMessages) {
-            try {
-              await msg.delete();
-            } catch (e) {
-              console.error(e);
-            }
-          }
-
           return await message.author.send({ embeds: [embed] });
         }
 

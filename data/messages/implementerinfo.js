@@ -38,7 +38,7 @@ const getImplementerInfoEmbed = async (user, message) => {
 
   const embed = new EmbedBuilder()
     .setTitle("Implementer Info")
-    .setColor("#00BFFF")
+    .setColor(Config.embedColorPrimary)
     .addFields(fields)
     .setFooter({ text: Config.footerText })
     .setTimestamp();
