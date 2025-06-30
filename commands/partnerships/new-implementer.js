@@ -20,9 +20,6 @@ module.exports = {
     try {
       const newEntry = new Implementer({
         userId: user.id,
-        amount: 0,
-        balance: 0,
-        addedAt: new Date(),
       });
       await newEntry.save();
 

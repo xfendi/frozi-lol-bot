@@ -95,7 +95,9 @@ module.exports = {
           });
         }
 
-        const newBalance = (user.balance += DEFAULT_PARTNERSHIP_PRICE);
+        const amountToAdd = user.price ?? DEFAULT_PARTNERSHIP_PRICE;
+        const newBalance = user.balance + amountToAdd;
+
         user.balance = Number(newBalance.toFixed(2));
 
         user.amount += 1;

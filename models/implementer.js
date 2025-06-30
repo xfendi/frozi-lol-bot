@@ -26,6 +26,11 @@ const ImplementerSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  price: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
   partnerships: {
     type: [
       {
