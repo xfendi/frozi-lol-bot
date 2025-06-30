@@ -17,6 +17,10 @@ module.exports = {
 
     const member = message.guild.members.cache.get(message.author.id);
 
+    const partnershipLogChannel = await client.channels.fetch(
+      Config.partnershipLogChannelId
+    );
+
     if (
       message.channel.id === Config.partnershipChannelId &&
       member.roles.cache.has(Config.implementerRoleId)
@@ -106,8 +110,11 @@ module.exports = {
         user.amount = newAmount;
 
         if (newAmount % PRICE_INCREASE_PER === 0) {
-          const newPrice = user.price + PRICE_INCREASE;
-          user.price = newPrice;
+          const times = Math.floor(newAmount / PRICE_INCREASE_PER);
+          console.log(times);
+          const newPrice = PRICE_INCREASE * times + DEFAULT_PARTNERSHIP_PRICE;
+          console.log(newPrice);
+          user.price = newPrice.toFixed(2);
 
           const newPriceEmbed = new EmbedBuilder()
             .setTitle("Price Increased")
@@ -118,12 +125,16 @@ module.exports = {
                 value: `<@${user.userId}> (${user.userId})`,
                 inline: false,
               },
-              { name: "New Price", value: `${newPrice} PLN`, inline: true }
+              { name: "New Price", value: `${newPrice} PLN`, inline: true },
+              { name: "Times Increased", value: `${times}x`, inline: true }
             )
             .setFooter({ text: Config.footerText })
             .setTimestamp();
 
-          await partnershipLogChannel.send({ embeds: [newPriceEmbed] });
+          await partnershipLogChannel.send({
+            embeds: [newPriceEmbed],
+            content: `<@${user.userId}>`,
+          });
         }
 
         user.lastAdvertisedAt = new Date();
@@ -164,10 +175,6 @@ module.exports = {
 
           await newPartnership.save();
         }
-
-        const partnershipLogChannel = await client.channels.fetch(
-          Config.partnershipLogChannelId
-        );
 
         const logEmbed = new EmbedBuilder()
           .setColor(Config.embedColorSuccess)
