@@ -111,9 +111,7 @@ module.exports = {
 
         if (newAmount % PRICE_INCREASE_PER === 0) {
           const times = Math.floor(newAmount / PRICE_INCREASE_PER);
-          console.log(times);
           const newPrice = PRICE_INCREASE * times + DEFAULT_PARTNERSHIP_PRICE;
-          console.log(newPrice);
           user.price = newPrice.toFixed(2);
 
           const newPriceEmbed = new EmbedBuilder()
