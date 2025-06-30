@@ -5,6 +5,8 @@ const Implementer = require("../models/implementer");
 const {
   DEFAULT_PARTNERSHIP_PRICE,
   MINIMUM_DAYS_BETWEEN_PARTNERSHIPS,
+  PRICE_INCREASE,
+  PRICE_INCREASE_PER,
 } = require("../data/partnerships");
 const partnership = require("../models/partnership");
 
@@ -100,7 +102,29 @@ module.exports = {
 
         user.balance = Number(newBalance.toFixed(2));
 
-        user.amount += 1;
+        const newAmount = user.amount + 1;
+        user.amount = newAmount;
+
+        if (newAmount % PRICE_INCREASE_PER === 0) {
+          const newPrice = user.price + PRICE_INCREASE;
+          user.price = newPrice;
+
+          const newPriceEmbed = new EmbedBuilder()
+            .setTitle("Price Increased")
+            .setColor(Config.embedColorSuccess)
+            .addFields(
+              {
+                name: "User",
+                value: `<@${user.userId}> (${user.userId})`,
+                inline: false,
+              },
+              { name: "New Price", value: `${newPrice} PLN`, inline: true }
+            )
+            .setFooter({ text: Config.footerText })
+            .setTimestamp();
+
+          await partnershipLogChannel.send({ embeds: [newPriceEmbed] });
+        }
 
         user.lastAdvertisedAt = new Date();
         user.partnerships.push({

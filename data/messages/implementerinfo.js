@@ -26,6 +26,11 @@ const getImplementerInfoEmbed = async (user, message) => {
       value: `${entry.balance} PLN`,
       inline: false,
     },
+    {
+      name: "Price per partnership",
+      value: `${entry.price} PLN`,
+      inline: false,
+    },
   ];
 
   if (entry.lastPayout) {
