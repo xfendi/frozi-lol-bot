@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
 const Config = require("../../config.json");
 const implementer = require("../../models/implementer");
-const { DEFAULT_PARTNERSHIP_PRICE } = require("../partnerships");
+const { DEFAULT_PARTNERSHIP_PRICE, PRICE_INCREASE_PER } = require("../partnerships");
 
 const getImplementerInfoEmbed = async (user, message) => {
   const entry = await implementer.findOne({ userId: user.id });
@@ -10,7 +10,7 @@ const getImplementerInfoEmbed = async (user, message) => {
     return;
   }
 
-  const priceIncreseTimes = Math.floor(newAmount / PRICE_INCREASE_PER);
+  const priceIncreseTimes = Math.floor(entry.amount / PRICE_INCREASE_PER);
 
   let fields = [
     { name: "User", value: `<@${user.id}> (${user.id})`, inline: false },
