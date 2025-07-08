@@ -7,6 +7,8 @@ const findAndDeleteRepresentivePartnerships = async (client, userId) => {
     "messages.representativeId": userId,
   });
 
+  const member = await client.users.fetch(userId);
+
   const logChannel = await client.channels.fetch(
     Config.partnershipLogChannelId
   );
@@ -49,8 +51,26 @@ const findAndDeleteRepresentivePartnerships = async (client, userId) => {
           .setFooter({ text: Config.footerText })
           .setTimestamp();
 
+        const dmEmbed = new EmbedBuilder()
+          .setTitle("Partnership Deleted!")
+          .setColor(Config.embedColorError)
+          .setDescription(
+            `> Your partnership has been removed because you left our server.`
+          )
+          .addFields({
+            name: "Invite",
+            value: doc.invite,
+            inline: false,
+          })
+          .setFooter({ text: Config.footerText })
+          .setTimestamp();
+
         if (logChannel && logChannel.isTextBased()) {
           await logChannel.send({ embeds: [embed] });
+        }
+
+        if (member) {
+          await member.send({ embeds: [dmEmbed] });
         }
       } catch (err) {
         console.warn(

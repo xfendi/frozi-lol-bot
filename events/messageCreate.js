@@ -222,6 +222,33 @@ module.exports = {
           .setFooter({ text: Config.footerText })
           .setTimestamp();
 
+        const representive = await client.users.fetch(mentionedUserId);
+
+        const dmEmbed = new EmbedBuilder()
+          .setTitle("Thank you for partnership!")
+          .setColor(Config.embedColorSuccess)
+          .setDescription(
+            "> You can come back after **3 days** to re-do partnership advertisement."
+          )
+          .setFields(
+            {
+              name: ":flag_pl:   REALIZATOR PARTNERSTW",
+              value: `
+              > poszukujemy do naszego zespołu **frozi.lol** realizatorów partnerstw`,
+              inline: false,
+            },
+            {
+              name: ":flag_pl:   CO OFERUJEMY?",
+              value: `> - Stawka na start za jedno partnerstwo wynosi **0.5 PLN** (wypłaty od **10 PLN**) (Stawka będzie później podwyższana)
+              > - Bot który automatycznie liczy i zarządza całym systemem partnerstw tym samym oszczędzając twój czas
+              > - Super społeczność, pomocny zespół i oczywiście najlepszy zarząd **frozi.lol**`,
+            }
+          )
+          .setFooter({ text: Config.footerText })
+          .setTimestamp();
+
+        await representive.send({ embeds: [dmEmbed] });
+
         message.reply({ embeds: [embed] });
       } catch (err) {
         console.error("❌ Error while advertising partnership:", err);
