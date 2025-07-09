@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { DEFAULT_PARTNERSHIP_PRICE } = require("../data/partnerships");
 
 const ImplementerSchema = new mongoose.Schema({
   userId: {
@@ -28,7 +29,7 @@ const ImplementerSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    default: 0,
+    default: DEFAULT_PARTNERSHIP_PRICE,
     min: 0,
   },
   partnerships: {
