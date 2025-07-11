@@ -49,7 +49,7 @@ module.exports = {
     console.log(type);
     if (!type || (type !== "$" && type !== "%")) {
       return message.reply({
-        content: "`⚠️` Please provide a promotion type: `$` or `$`.",
+        content: "`⚠️` Please provide a promotion type: `$` or `%`.",
         ephemeral: true,
       });
     }
