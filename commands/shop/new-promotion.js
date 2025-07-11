@@ -6,6 +6,8 @@ const {
 } = require("discord.js");
 const Config = require("../../config.json");
 
+const admin = require("firebase-admin");
+
 const { db } = require("../../firebase");
 
 module.exports = {
