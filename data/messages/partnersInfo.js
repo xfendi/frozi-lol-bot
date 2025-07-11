@@ -7,7 +7,7 @@ const partnersInfoEmbed = new EmbedBuilder()
     `# \`💻 frozi.lol × PARTNERS\`
 
     > We are proud to partner with some amazing communities and platforms.
-    > If you are interested in becoming a partner, please contact us via <#${Config.ticketCahnnelId}>
+    > If you are interested in becoming a partner, please contact us via <#${Config.ticketChannelId}>
         
     > Here are requirements to become a partner:
 

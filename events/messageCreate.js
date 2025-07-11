@@ -258,8 +258,22 @@ module.exports = {
       }
     }
 
-    if (!message.content.startsWith(prefix) || message.author.id !== ownerId)
-      return;
+    if (!message.content.startsWith(prefix)) return;
+
+    if (message.guild.id !== Config.guildId) {
+      return message.reply({
+        content:
+          "`⚠️` This command can only be used in the official frozi.lol server.",
+        ephemeral: true,
+      });
+    }
+
+    if (!message.member.roles.cache.has(Config.botAccessRoleId)) {
+      return message.reply({
+        content: "`⚠️` This bot can only be used by admins.",
+        ephemeral: true,
+      });
+    }
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();

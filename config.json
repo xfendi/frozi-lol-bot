@@ -1,7 +1,8 @@
 {
   "prefix": ",",
 
-  "verificationLink": "https://restorecord.com/verify/frozi.lol",
+  "guildId": "1380404392825721053",
+  "botAccessRoleId": "1393213546401370202",
 
   "embedColorPrimary": "#3498DB",
 
@@ -11,19 +12,16 @@
 
   "footerText": "frozi.lol",
 
-  "ticketCahnnelId": "1380404393471512619",
-
   "ticketRoleId": "1380589244392804522",
   "verifyRoleId": "1380404392825721054",
   "ogRoleId": "1385280589237850144",
   "implementerRoleId": "1386415383984214056",
-
-  "ownerId": "804372572928999434",
 
   "archiveChannelId": "1380608778726146048",
   "logChannelId": "1380404393324576772",
   "welcomeChannelId": "1380404393324576777",
   "partnershipLogChannelId": "1386448992979652668",
 
+  "ticketChannelId": "1380404393471512619",
   "partnershipChannelId": "1382014092142837810"
 }

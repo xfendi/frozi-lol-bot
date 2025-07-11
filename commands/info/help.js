@@ -35,9 +35,7 @@ module.exports = {
     const baseEmbed = new EmbedBuilder()
       .setColor(Config.embedColorPrimary)
       .setTitle("Commands List")
-      .setDescription(
-        "Select a category from the menu below to view commands."
-      )
+      .setDescription("Select a category from the menu below to view commands.")
       .setFooter({ text: Config.footerText })
       .setTimestamp();
 
@@ -47,9 +45,7 @@ module.exports = {
     });
 
     const collector = msg.createMessageComponentCollector({
-      filter: (i) =>
-        i.customId === "help_select_category" &&
-        i.user.id === message.author.id,
+      filter: (i) => i.customId === "help_select_category",
       time: 60_000,
     });
 
