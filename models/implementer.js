@@ -52,7 +52,6 @@ const ImplementerSchema = new mongoose.Schema({
         messageId: {
           type: String,
           required: true,
-          unique: true,
         },
       },
     ],
