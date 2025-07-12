@@ -9,5 +9,4 @@ if (!admin.apps.length) {
 
 module.exports = {
   db: admin.firestore(),
-  auth: admin.auth(),
 };

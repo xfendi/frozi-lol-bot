@@ -6,7 +6,6 @@ const {
 } = require("discord.js");
 const Config = require("../../config.json");
 
-const admin = require("firebase-admin");
 const { StringSelectMenuBuilder } = require("discord.js");
 const { db } = require("../../firebase");
 
@@ -14,7 +13,7 @@ module.exports = {
   name: "promotions",
   description: "AList and manage promotions for products in the shop",
   async execute(message, args, client) {
-    const allPromoions = await admin.firestore().collection("promotions").get();
+    const allPromoions = await db.collection("promotions").get();
 
     if (allPromoions.empty) {
       return message.reply({

@@ -1,7 +1,7 @@
 const Config = require("../../config.json");
 
-const admin = require("firebase-admin");
 const { EmbedBuilder } = require("discord.js");
+const { db } = require("../../firebase");
 
 const generateUniqueAdminCode = async () => {
   const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -16,7 +16,7 @@ const generateUniqueAdminCode = async () => {
       key += charset.charAt(Math.floor(Math.random() * charset.length));
     }
 
-    const doc = await admin.firestore().collection("adminCodes").doc(key).get();
+    const doc = await db.collection("adminCodes").doc(key).get();
     exists = doc.exists;
   }
 
@@ -30,7 +30,7 @@ module.exports = {
     try {
       const code = await generateUniqueAdminCode();
 
-      await admin.firestore().collection("adminCodes").add({
+      await db.collection("adminCodes").doc(code).set({
         code,
         createdAt: new Date(),
         createdBy: message.author.id,
